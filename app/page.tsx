@@ -27,7 +27,7 @@ const process = [
 ];
 
 function Logo({ light = false }: { light?: boolean }) {
-  return <span className={`brand-logo ${light ? "brand-logo--light" : ""}`}><Image src="/mtech-logo-transparent.png" alt="MTECH Security" width={1776} height={887} priority /></span>;
+  return <span className={`brand-logo ${light ? "brand-logo--light" : ""}`}><Image src="/mtech-logo-clean.png" alt="MTECH Security" width={1391} height={424} priority /></span>;
 }
 
 export default function Home() {
@@ -35,10 +35,11 @@ export default function Home() {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
+    document.documentElement.classList.add("motion-ready");
     const onScroll = () => setScrolled(window.scrollY > 30);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
-    const observer = new IntersectionObserver((entries) => entries.forEach((entry) => entry.isIntersecting && entry.target.classList.add("is-visible")), { threshold: 0.14 });
+    const observer = new IntersectionObserver((entries) => entries.forEach((entry) => { if (entry.isIntersecting) { entry.target.classList.add("is-visible"); observer.unobserve(entry.target); } }), { threshold: 0.14 });
     document.querySelectorAll("[data-reveal]").forEach((el) => observer.observe(el));
     return () => { window.removeEventListener("scroll", onScroll); observer.disconnect(); };
   }, []);
@@ -47,10 +48,10 @@ export default function Home() {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const message = `Hello MTECH Security, I would like to enquire about a security solution.%0A%0AName: ${encodeURIComponent(String(data.get("name")))}%0APhone: ${encodeURIComponent(String(data.get("phone")))}%0AEmail: ${encodeURIComponent(String(data.get("email")))}%0AService: ${encodeURIComponent(String(data.get("service")))}%0AMessage: ${encodeURIComponent(String(data.get("message")))}`;
-    window.open(`https://wa.me/263786582207?text=${message}`, "_blank", "noopener,noreferrer");
+    window.location.assign(`https://wa.me/263786582207?text=${message}`);
   }
 
-  const links = [["Home","home"],["About","about"],["Services","services"],["Why MTECH","why"],["Projects","projects"],["Contact","contact"]];
+  const links = [["Home","home"],["About","about"],["Services","services"],["Projects","projects"],["Contact","contact"]];
   return (
     <main>
       <a className="skip-link" href="#main-content">Skip to content</a>
